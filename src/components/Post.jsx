@@ -71,10 +71,10 @@ export function Post() {
           className="resize-y max-h-44 min-h-[96px] focus:caret-success-500 rounded-lg px-4 py-3 mb-4 bg-gray-100 dark:bg-gray-900"
         />
 
-        <footer className='invisible max-h-0 group-focus-within:visible group-focus-within:max-h-none transition-all duration-150 ease-linear'>
+        <footer className='invisible max-h-0 group-focus-within:visible group-focus-within:max-h-none'>
           <button
             type="submit"
-            className="px-6 pt-4 pb-3.5 bg-success-500 hover:bg-success-100 transition-all duration-150 ease-in-out rounded-lg font-bold w-fit text-gray-100"
+            className="px-6 pt-4 pb-3.5 bg-success-500 hover:bg-success-100 transition-colors duration-150 ease-in-out rounded-lg font-bold w-fit text-gray-100"
           >
             Publicar
           </button>
