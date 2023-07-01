@@ -12,7 +12,7 @@ export function Sidebar() {
       />
 
       <div className="flex flex-col items-center -mt-8">
-        <Avatar imgUrl={'https://github.com/lukaswyver.png'} />
+        <Avatar hasBorder imgUrl={'https://github.com/lukaswyver.png'} />
 
         <strong className="text-base mt-4">Lukas Wyver</strong>
         <span className="text-sm text-gray-400">Dev Front-End</span>

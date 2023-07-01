@@ -1,11 +1,12 @@
 import { Avatar } from './Avatar';
+import { Comment } from './Comment';
 
 export function Post() {
   return (
-    <article className="bg-white drop-shadow-md dark:bg-gray-800 rounded-lg p-10">
+    <article className="bg-white drop-shadow-md dark:bg-gray-800 rounded-lg p-5 md:p-10">
       <header className="flex items-center justify-between">
         <div className="flex gap-4">
-          <Avatar imgUrl="https://github.com/lukaswyver.png" />
+          <Avatar hasBorder imgUrl="https://github.com/lukaswyver.png" />
 
           <div className="">
             <strong className="block text-gray-900 dark:text-gray-100">
@@ -80,6 +81,13 @@ export function Post() {
           </button>
         </footer>
       </form>
+
+      <div className="mt-8">
+        <Comment />
+        <Comment />
+        <Comment />
+        <Comment />
+      </div>
     </article>
   );
 }
