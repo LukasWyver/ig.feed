@@ -1,81 +1,115 @@
+/* eslint-disable react/prop-types */
+import { format, formatDistanceToNow } from 'date-fns';
+import ptBr from 'date-fns/locale/pt-BR';
+
 import { Avatar } from './Avatar';
 import { Comment } from './Comment';
+import { useState } from 'react';
 
-export function Post() {
+export function Post({ author, content, publishedAt }) {
+  const [comments, setComments] = useState([
+    'Post muito bacana, hein?!',
+    'Muito bom cara, parabéns!! 👏👏'
+  ])
+  const [newCommentText, setNewCommentText] = useState('');
+
+  const publishedDateFormatted = format(
+    publishedAt,
+    "dd 'de' LLLL 'ás' HH:mm'h'",
+    {
+      locale: ptBr,
+    }
+  );
+
+  const publishedDateRelativeToNow = formatDistanceToNow(publishedAt, {
+    locale: ptBr,
+    addSuffix: true,
+  });
+
+  function handleNewCommentChange(){
+    setNewCommentText(event.target.value)
+  }
+
+  function handleCreateNewComment() {
+    event.preventDefault()
+
+    if(newCommentText === ''){
+      return;
+    }
+
+    setComments([...comments, newCommentText])
+    setNewCommentText('');
+  }
+
   return (
-    <article className="bg-white drop-shadow-md dark:bg-gray-800 rounded-lg p-5 md:p-10">
+    <article className="rounded-lg bg-white p-5 drop-shadow-md dark:bg-gray-800 md:p-10">
       <header className="flex items-center justify-between">
         <div className="flex gap-4">
-          <Avatar hasBorder imgUrl="https://github.com/lukaswyver.png" />
+          <Avatar hasBorder imgUrl={author.avatarUrl} />
 
           <div className="">
             <strong className="block text-gray-900 dark:text-gray-100">
-              Lukas Wyver
+              {author.name}
             </strong>
-            <span className="text-sm text-gray-400">Dev Front-End</span>
+            <span className="text-sm text-gray-400">{author.role}</span>
           </div>
         </div>
 
         <time
-          title="25 de Julho ás 19:04"
-          dateTime="2023-06-25 19:04:00z"
+          title={publishedDateFormatted}
+          dateTime={publishedAt.toISOString()}
           className="text-sm text-gray-400"
         >
-          Públicado há 1h
+          {publishedDateRelativeToNow}
         </time>
       </header>
 
-      <div className="mt-7 text-gray-800 dark:text-gray-300 space-y-6">
-        <p>Fala galeraa 👋</p>
-
-        <p>
-          Acabei de subir mais um projeto no meu portifa. É um projeto que fiz
-          no NLW Return, evento da Rocketseat. O nome do projeto é DoctorCare 🚀
-        </p>
-
-        <p className="space-x-1">
-          <span>👉</span>
-          <a
-            href="#"
-            className="text-success-500 hover:text-success-100 transition-all duration-75 ease-in-out hover:underline font-bold"
-          >
-            jane.design/doctorcare
-          </a>
-        </p>
-
-        <p className="space-x-1">
-          <a
-            href="#"
-            className="text-success-500 hover:text-success-100 transition-all duration-75 ease-in-out hover:underline font-bold"
-          >
-            #novoprojeto
-          </a>
-          <a
-            href="#"
-            className="text-success-500 hover:text-success-100 transition-all duration-75 ease-in-out hover:underline font-bold"
-          >
-            #nlw
-          </a>
-          <a
-            href="#"
-            className="text-success-500 hover:text-success-100 transition-all duration-75 ease-in-out hover:underline font-bold"
-          >
-            #rocketseat
-          </a>
-        </p>
+      <div className="mt-7 space-y-6 text-gray-800 dark:text-gray-300">
+        {content.map((line, index) => {
+          if (line.type === 'paragraph') {
+            return <p key={index}>{line.content}</p>;
+          } else if (line.type === 'link') {
+            return (
+              <p key={index}>
+                <a
+                  href="#"
+                  className="font-bold text-success-500 transition-all duration-75 ease-in-out hover:text-success-100 hover:underline"
+                >
+                  {line.content}
+                </a>
+              </p>
+            );
+          } else if (line.type === 'hashtag') {
+            return (
+              <a
+                key={index}
+                href="#"
+                className="mx-1 font-bold text-success-500 transition-all duration-75 ease-in-out first-of-type:ml-0 hover:text-success-100 hover:underline"
+              >
+                {line.content}
+              </a>
+            );
+          }
+        })}
       </div>
 
-      <form className="flex flex-col mt-6 pt-6 border-t border-gray-300 dark:border-gray-600 group">
+      <form
+        onSubmit={handleCreateNewComment}
+        className="group mt-6 flex flex-col border-t border-gray-300 pt-6 dark:border-gray-600"
+      >
         <strong className="mb-4">Deixe seu feedback</strong>
         <textarea
+          name="comment"
+          value={newCommentText}
+          onChange={handleNewCommentChange}
           placeholder="Escreva um comentário..."
-          className="resize-y max-h-44 min-h-[96px] focus:caret-success-500 rounded-lg px-4 py-3 mb-4 bg-gray-100 dark:bg-gray-900"
+          className="mb-4 max-h-44 min-h-[96px] resize-y rounded-lg bg-gray-100 px-4 py-3 focus:caret-success-500 dark:bg-gray-900"
         />
 
-        <footer className='invisible max-h-0 group-focus-within:visible group-focus-within:max-h-none'>
+        <footer className="invisible max-h-0 group-focus-within:visible group-focus-within:max-h-none">
           <button
             type="submit"
-            className="px-6 pt-4 pb-3.5 bg-success-500 hover:bg-success-100 transition-colors duration-150 ease-in-out rounded-lg font-bold w-fit text-gray-100"
+            className="w-fit rounded-lg bg-success-500 px-6 pb-3.5 pt-4 font-bold text-gray-100 transition-colors duration-150 ease-in-out hover:bg-success-100"
           >
             Publicar
           </button>
@@ -83,10 +117,9 @@ export function Post() {
       </form>
 
       <div className="mt-8">
-        <Comment />
-        <Comment />
-        <Comment />
-        <Comment />
+        {comments.map((comment, index) => {
+          return <Comment key={index} content={comment} />;
+        })}
       </div>
     </article>
   );

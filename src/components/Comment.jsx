@@ -1,7 +1,8 @@
+/* eslint-disable react/prop-types */
 import { ThumbsUp, Trash2 } from 'lucide-react';
 import { Avatar } from './Avatar';
 
-export function Comment() {
+export function Comment({content}) {
   return (
     <div className="mt-6 flex gap-4">
       <Avatar imgUrl="https://github.com/lukaswyver.png"/>
@@ -25,7 +26,7 @@ export function Comment() {
             </button>
           </header>
 
-          <p className='mt-4 text-gray-600 dark:text-gray-300'>Muito bom Devon, parabéns!! 👏👏</p>
+          <p className='mt-4 text-gray-600 dark:text-gray-300'>{content}</p>
         </div>
 
         <footer className='mt-4'>
