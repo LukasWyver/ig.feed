@@ -1,8 +1,21 @@
 /* eslint-disable react/prop-types */
-import { ThumbsUp, Trash2 } from 'lucide-react';
+import { useState } from 'react';
 import { Avatar } from './Avatar';
+import { ThumbsUp, Trash2 } from 'lucide-react';
 
-export function Comment({content}) {
+export function Comment({content, onDeleteComment}) {
+  const [likeCount, setLikeCount] = useState(0)
+
+  function handleDeleteComment(){
+    onDeleteComment(content);
+  }
+
+  function handleLikeComment(){
+    setLikeCount((state) => {
+      return state +1;
+    })
+  }
+
   return (
     <div className="mt-6 flex gap-4">
       <Avatar imgUrl="https://github.com/lukaswyver.png"/>
@@ -21,7 +34,7 @@ export function Comment({content}) {
               </time>
             </div>
 
-            <button title="Deletar comentário" className='rounded-sm text-gray-400 dark:text-gray-500 hover:text-danger-500 dark:hover:text-danger-500 transition-colors duration-75 ease-linear'>
+            <button onClick={handleDeleteComment} title="Deletar comentário" className='rounded-sm text-gray-400 dark:text-gray-500 hover:text-danger-500 dark:hover:text-danger-500 transition-colors duration-75 ease-linear'>
               <Trash2 size="24"/>
             </button>
           </header>
@@ -30,10 +43,10 @@ export function Comment({content}) {
         </div>
 
         <footer className='mt-4'>
-          <button className="flex items-center rounded-sm text-gray-400 dark:text-gray-500 hover:text-success-500 dark:hover:text-success-500 transition-colors duration-75 ease-linear">
+          <button onClick={handleLikeComment} className="flex items-center rounded-sm text-gray-400 dark:text-gray-500 hover:text-success-500 dark:hover:text-success-500 transition-colors duration-75 ease-linear">
             <ThumbsUp className='mr-2'/>
             Aplaudir
-            <span className="before:content-['\2022'] before:px-1">03</span>
+            <span className="before:content-['\2022'] before:px-1">{likeCount}</span>
           </button>
         </footer>
       </div>
