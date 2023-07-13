@@ -1,8 +1,8 @@
-import { Post } from './components/Post';
+import { Post, PostType } from './components/Post';
 import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
 
-const posts = [
+const posts: PostType[] = [
   {
     id: 1,
     author: {
@@ -52,9 +52,7 @@ function App() {
            return (
             <Post
               key={post.id}
-              author={post.author}
-              content={post.content}
-              publishedAt={post.publishedAt}
+              post={post}
             />
            )
           })}

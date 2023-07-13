@@ -1,9 +1,13 @@
-/* eslint-disable react/prop-types */
 import { useState } from 'react';
 import { Avatar } from './Avatar';
 import { ThumbsUp, Trash2 } from 'lucide-react';
 
-export function Comment({content, onDeleteComment}) {
+interface CommentProps {
+  content: string;
+  onDeleteComment: (comment: string) => void;
+}
+
+export function Comment({content, onDeleteComment}: CommentProps) {
   const [likeCount, setLikeCount] = useState(0)
 
   function handleDeleteComment(){
@@ -18,7 +22,7 @@ export function Comment({content, onDeleteComment}) {
 
   return (
     <div className="mt-6 flex gap-4">
-      <Avatar imgUrl="https://github.com/lukaswyver.png"/>
+      <Avatar src="https://github.com/lukaswyver.png" alt=''/>
 
       <div className="flex-1">
         <div className="bg-gray-100 dark:bg-gray-700 rounded-lg p-4">

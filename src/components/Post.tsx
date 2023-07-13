@@ -1,12 +1,33 @@
-/* eslint-disable react/prop-types */
 import { format, formatDistanceToNow } from 'date-fns';
 import ptBr from 'date-fns/locale/pt-BR';
 
 import { Avatar } from './Avatar';
 import { Comment } from './Comment';
-import { useState } from 'react';
+import { ChangeEvent, FormEvent, InvalidEvent, useState } from 'react';
 
-export function Post({ author, content, publishedAt }) {
+interface Author {
+  name: string;
+  role: string;
+  avatarUrl: string;
+}
+
+interface Content {
+  type: 'paragraph' | 'link' | 'hashtag';
+  content: string;
+}
+
+export interface PostType {
+  id: number;
+  author: Author;
+  content: Content[];
+  publishedAt: Date;
+}
+
+interface PostProps {
+  post: PostType;
+}
+
+export function Post({ post }: PostProps) {
   const [comments, setComments] = useState([
     'Post muito bacana, hein?!',
     'Muito bom cara, parabéns!! 👏👏',
@@ -14,24 +35,24 @@ export function Post({ author, content, publishedAt }) {
   const [newCommentText, setNewCommentText] = useState('');
 
   const publishedDateFormatted = format(
-    publishedAt,
+    post.publishedAt,
     "dd 'de' LLLL 'ás' HH:mm'h'",
     {
       locale: ptBr,
     }
   );
 
-  const publishedDateRelativeToNow = formatDistanceToNow(publishedAt, {
+  const publishedDateRelativeToNow = formatDistanceToNow(post.publishedAt, {
     locale: ptBr,
     addSuffix: true,
   });
 
-  function handleNewCommentChange() {
+  function handleNewCommentChange(event: ChangeEvent<HTMLTextAreaElement>) {
     event.target.setCustomValidity('');
     setNewCommentText(event.target.value);
   }
 
-  function handleCreateNewComment() {
+  function handleCreateNewComment(event: FormEvent) {
     event.preventDefault();
 
     if (isNewCommentEmpty) {
@@ -42,11 +63,11 @@ export function Post({ author, content, publishedAt }) {
     setNewCommentText('');
   }
 
-  function handleNewCommentInvalid() {
+  function handleNewCommentInvalid(event: InvalidEvent<HTMLTextAreaElement>) {
     event.target.setCustomValidity('Este campo é obrigatório!');
   }
 
-  function deleteComment(commentToDelete) {
+  function deleteComment(commentToDelete: string) {
     const commentsWithoutDeletedOne = comments.filter((comment) => {
       return comment !== commentToDelete;
     });
@@ -60,19 +81,19 @@ export function Post({ author, content, publishedAt }) {
     <article className="rounded-lg bg-white p-5 drop-shadow-md dark:bg-gray-800 md:p-10">
       <header className="flex items-center justify-between">
         <div className="flex gap-4">
-          <Avatar hasBorder imgUrl={author.avatarUrl} />
+          <Avatar hasBorder src={post.author.avatarUrl} />
 
           <div className="">
             <strong className="block text-gray-900 dark:text-gray-100">
-              {author.name}
+              {post.author.name}
             </strong>
-            <span className="text-sm text-gray-400">{author.role}</span>
+            <span className="text-sm text-gray-400">{post.author.role}</span>
           </div>
         </div>
 
         <time
           title={publishedDateFormatted}
-          dateTime={publishedAt.toISOString()}
+          dateTime={post.publishedAt.toISOString()}
           className="text-sm text-gray-400"
         >
           {publishedDateRelativeToNow}
@@ -80,7 +101,7 @@ export function Post({ author, content, publishedAt }) {
       </header>
 
       <div className="mt-7 space-y-6 text-gray-800 dark:text-gray-300">
-        {content.map((line) => {
+        {post.content.map((line) => {
           if (line.type === 'paragraph') {
             return <p key={line.content}>{line.content}</p>;
           } else if (line.type === 'link') {
